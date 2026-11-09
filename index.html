@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>忘年会クイズ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Zen+Maru+Gothic:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a1230;--bg2:#16256b;--ink:#fff;--mute:#9fb0e8;--c0:#e8334a;--c1:#2f6bff;--c2:#1fb36b;--c3:#f2b705;--gold:#ffd23f}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{background:radial-gradient(120% 90% at 50% 0%,var(--bg2),var(--bg) 70%) fixed;color:var(--ink);font-family:"Zen Maru Gothic","Hiragino Maru Gothic ProN","Meiryo",sans-serif;font-weight:700;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+.disp{font-family:"Dela Gothic One","Zen Maru Gothic",sans-serif;font-weight:400}
+button{font:inherit;color:inherit;border:0;cursor:pointer}
+.wrap{max-width:560px;margin:0 auto;padding:20px 16px 32px}
+h1{font-size:1.6rem;line-height:1.3}
+.mute{color:var(--mute);font-weight:500}
+.btn{display:block;width:100%;padding:16px;border-radius:14px;background:var(--gold);color:#1a1a1a;font-size:1.15rem;font-weight:900}
+.btn.sub{background:rgba(255,255,255,.12);color:var(--ink);font-size:.95rem;padding:10px;font-weight:700}
+.btn[disabled]{opacity:.4}
+input{width:100%;padding:14px;border-radius:12px;border:2px solid var(--mute);background:#fff;color:#111;font:inherit;font-size:1.1rem;margin:12px 0}
+.opts{display:grid;gap:12px;margin-top:16px}
+.opt{display:flex;align-items:center;gap:12px;padding:18px 14px;border-radius:16px;text-align:left;font-size:1.15rem;font-weight:900;color:#fff;border:4px solid transparent;transition:opacity .2s,transform .1s}
+.opt:active{transform:scale(.98)}
+.opt b{font-family:"Dela Gothic One",sans-serif;font-weight:400;font-size:1.6rem;min-width:1.6em;text-align:center}
+.c0{background:var(--c0)}.c1{background:var(--c1)}.c2{background:var(--c2)}.c3{background:var(--c3);color:#1a1a1a}
+.opt.sel{border-color:#fff;box-shadow:0 0 0 4px rgba(255,255,255,.35)}
+.opt.dim{opacity:.28}
+.opt.ok{border-color:var(--gold);box-shadow:0 0 0 6px rgba(255,210,63,.45)}
+.big{text-align:center;padding:36px 0}
+.big .disp{font-size:3rem;line-height:1.2}
+.q{font-size:1.35rem;line-height:1.5;margin-top:8px}
+.tag{display:inline-block;padding:4px 12px;border-radius:99px;background:rgba(255,255,255,.14);font-size:.9rem}
+.rank{list-style:none;padding:0;margin-top:14px;display:grid;gap:8px}
+.rank li{display:flex;gap:12px;align-items:center;padding:10px 14px;background:rgba(255,255,255,.09);border-radius:12px}
+.rank .n{font-family:"Dela Gothic One",sans-serif;min-width:2em;color:var(--gold)}
+.rank .s{margin-left:auto}
+/* projector : TV quiz show look */
+body.tv{background:radial-gradient(ellipse 90% 70% at 50% -8%,#3f86ff 0%,#0f34b8 38%,#061049 78%) fixed;overflow-x:hidden}
+body.tv::before{content:"";position:fixed;inset:0;pointer-events:none;background:repeating-conic-gradient(from 0deg at 50% -12%,rgba(255,255,255,.10) 0 4deg,transparent 4deg 15deg);-webkit-mask-image:linear-gradient(#000 0,transparent 70%);mask-image:linear-gradient(#000 0,transparent 70%)}
+.screen{position:relative;min-height:100vh;padding:2.6vw 5vw;display:flex;flex-direction:column;gap:1.8vw}
+.screen .head{display:flex;justify-content:space-between;align-items:center;font-size:2vw}
+.screen .head .tag{background:linear-gradient(#ffe27a,#ffb800);color:#3a2500;font-family:"Dela Gothic One",sans-serif;font-weight:400;font-size:2.2vw;padding:.4vw 2vw;border-radius:99px;box-shadow:0 .3vw 0 #9a6a00}
+.screen #cnt{font-family:"Dela Gothic One",sans-serif;font-weight:400;font-size:2.4vw;text-shadow:0 .2vw 0 rgba(0,0,0,.4)}
+.screen .qtext{font-size:3.5vw;line-height:1.4;padding:1.8vw 3vw;border-radius:1.6vw;background:linear-gradient(#1b3fc9,#0a1f7a);border:.35vw solid #ffd23f;box-shadow:0 0 0 .25vw #0a1f7a,0 1vw 2.4vw rgba(0,0,0,.5),inset 0 .3vw 0 rgba(255,255,255,.25);text-shadow:0 .2vw 0 rgba(0,0,0,.35)}
+.screen .panels{display:grid;grid-template-columns:1fr 1fr;gap:1.6vw}
+.screen .panel{position:relative;overflow:hidden;border-radius:1.6vw;padding:1.8vw 2.2vw;font-size:2.8vw;display:flex;align-items:center;gap:1.6vw;min-height:12vw;border:.3vw solid rgba(255,255,255,.85);box-shadow:0 .6vw 0 rgba(0,0,0,.35),0 1.4vw 2.4vw rgba(0,0,0,.4),inset 0 .35vw 0 rgba(255,255,255,.55),inset 0 -.8vw 1.2vw rgba(0,0,0,.28);text-shadow:0 .15vw 0 rgba(0,0,0,.35);transition:opacity .4s,filter .4s}
+.screen .panel::after{content:"";position:absolute;left:0;right:0;top:0;height:46%;background:linear-gradient(rgba(255,255,255,.28),rgba(255,255,255,0));pointer-events:none}
+.screen .panel.c0{background:linear-gradient(#ff6f80,#e8334a 50%,#b3162d)}
+.screen .panel.c1{background:linear-gradient(#6aa0ff,#2f6bff 50%,#1a43c0)}
+.screen .panel.c2{background:linear-gradient(#4fe39a,#1fb36b 50%,#0f8049)}
+.screen .panel.c3{background:linear-gradient(#ffe36e,#f2b705 50%,#c28900);color:#2a1d00;text-shadow:0 .15vw 0 rgba(255,255,255,.45)}
+.screen .panel b{flex:none;width:6vw;height:6vw;border-radius:50%;display:grid;place-items:center;background:#fff;color:#222;font-family:"Dela Gothic One",sans-serif;font-weight:400;font-size:3.6vw;text-shadow:none;box-shadow:inset 0 -.4vw 0 rgba(0,0,0,.18),0 .3vw .6vw rgba(0,0,0,.35)}
+.screen .c0 b{color:#e8334a}.screen .c1 b{color:#2f6bff}.screen .c2 b{color:#14925a}.screen .c3 b{color:#b07d00}
+.screen .panel .bar{position:absolute;left:0;bottom:0;height:1.1vw;background:linear-gradient(90deg,#fff6c4,#ffd23f);transition:width .9s cubic-bezier(.2,.8,.2,1);z-index:1}
+.screen .panel .cnt{margin-left:auto;font-family:"Dela Gothic One",sans-serif;font-weight:400;font-size:5.4vw;color:#fff;-webkit-text-stroke:.18vw rgba(0,0,0,.45);paint-order:stroke fill;text-shadow:0 .3vw 0 rgba(0,0,0,.4)}
+.screen .c3 .cnt{color:#fff}
+.screen .panel.dim{opacity:.3;filter:grayscale(.7)}
+.screen .panel.ok{border-color:#ffd23f;box-shadow:0 0 0 .5vw #ffd23f,0 0 4vw 1vw rgba(255,210,63,.75),0 .6vw 0 rgba(0,0,0,.35),inset 0 .35vw 0 rgba(255,255,255,.6);animation:pop .7s cubic-bezier(.2,1.4,.4,1)}
+@keyframes pop{0%{transform:scale(.94)}60%{transform:scale(1.04)}100%{transform:scale(1)}}
+.screen .banner{font-family:"Dela Gothic One",sans-serif;font-weight:400;font-size:4.2vw;text-align:center;color:#ffe27a;-webkit-text-stroke:.22vw #5a3a00;paint-order:stroke fill;text-shadow:0 .4vw 0 #5a3a00,0 .8vw 1.4vw rgba(0,0,0,.5)}
+.screen .rank{grid-template-columns:1fr 1fr;gap:1vw 2vw}
+.screen .rank li{font-size:2.4vw;padding:1.1vw 1.8vw;border-radius:1.2vw;background:linear-gradient(#1b3fc9,#0a1f7a);border:.2vw solid rgba(255,210,63,.8);box-shadow:inset 0 .25vw 0 rgba(255,255,255,.22),0 .4vw 0 rgba(0,0,0,.3)}
+.screen .rank .n{color:#ffd23f;text-shadow:0 .2vw 0 rgba(0,0,0,.4)}
+.screen .title{font-size:7.4vw;line-height:1.2;text-align:center;color:#ffe27a;-webkit-text-stroke:.3vw #5a3a00;paint-order:stroke fill;text-shadow:0 .6vw 0 #5a3a00,0 1.2vw 2vw rgba(0,0,0,.5)}
+.idle{flex:1;display:flex;align-items:center;justify-content:center;gap:6vw}
+.idle #qr{background:#fff;padding:1.4vw;border-radius:1.6vw;line-height:0;border:.4vw solid #ffd23f;box-shadow:0 0 3vw rgba(255,210,63,.6)}
+.idle .info{font-size:2.4vw;line-height:1.8}
+.err{background:#7a1020;padding:14px;border-radius:12px;margin:16px}
+.host dl{display:grid;grid-template-columns:auto 1fr;gap:6px 12px;margin:14px 0}
+.host .gap{display:grid;gap:10px;margin-top:14px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getDatabase, ref, set, onValue, remove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+/* ========== 1. Firebaseの設定（ここを書き換える） ========== */
+const firebaseConfig = {
+  apiKey: "AIzaSyC9CVUDWj0fGU9IOLY2NPA5RDDaOT7b99A",
+  authDomain: "fy26-sys-depqsystem.firebaseapp.com",
+  databaseURL: "https://fy26-sys-depqsystem-default-rtdb.firebaseio.com",
+  projectId: "fy26-sys-depqsystem",
+  storageBucket: "fy26-sys-depqsystem.firebasestorage.app",
+  messagingSenderId: "4527063701",
+  appId: "1:4527063701:web:a976c838354d0f4063519c"
+};
+
+/* ========== 2. 問題（ここを書き換える。answer は 0=A, 1=B, 2=C, 3=D） ========== */
+const TITLE = "忘年会クイズ大会";
+const QUESTIONS = [
+  { text: "日本で一番高い山は？", choices: ["富士山", "北岳", "槍ヶ岳", "立山"], answer: 0 },
+  { text: "1年は何日？（うるう年を除く）", choices: ["360日", "364日", "365日", "366日"], answer: 2 },
+  { text: "寿司ネタ「トロ」はどの魚の部位？", choices: ["サケ", "マグロ", "タイ", "ブリ"], answer: 1 }
+];
+/* ================================================================ */
+
+const N = QUESTIONS.length, LET = ["A", "B", "C", "D"];
+const role = new URLSearchParams(location.search).get("role") || "player";
+const app = document.getElementById("app");
+if (role === "screen") document.body.classList.add("tv");
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const BASE = location.origin + location.pathname;
+
+if (firebaseConfig.apiKey.startsWith("YOUR_")) {
+  app.innerHTML = '<div class="err">Firebaseの設定がまだです。index.html の firebaseConfig を書き換えてください。</div>';
+  throw new Error("config missing");
+}
+const db = getDatabase(initializeApp(firebaseConfig));
+let state = { phase: "idle", q: 0, session: 0 }, players = {}, answers = {};
+
+const NEXT = {
+  idle: () => ({ phase: "question", q: 0 }),
+  question: s => ({ phase: "closed", q: s.q }),
+  closed: s => ({ phase: "votes", q: s.q }),
+  votes: s => ({ phase: "reveal", q: s.q }),
+  reveal: s => ({ phase: "ranking", q: s.q }),
+  ranking: s => s.q + 1 < N ? { phase: "question", q: s.q + 1 } : { phase: "end", q: s.q },
+  end: () => null
+};
+const PREV = {
+  idle: () => null,
+  question: s => s.q > 0 ? { phase: "ranking", q: s.q - 1 } : { phase: "idle", q: 0 },
+  closed: s => ({ phase: "question", q: s.q }),
+  votes: s => ({ phase: "closed", q: s.q }),
+  reveal: s => ({ phase: "votes", q: s.q }),
+  ranking: s => ({ phase: "reveal", q: s.q }),
+  end: s => ({ phase: "ranking", q: s.q })
+};
+const NEXT_LABEL = s => ({
+  idle: "第1問を出題", question: "回答を締め切る", closed: "票数を発表",
+  votes: "正解を発表", reveal: "ランキングを表示",
+  ranking: s.q + 1 < N ? `第${s.q + 2}問へ` : "最終結果へ", end: "終了しました"
+})[s.phase];
+const PHASE_JA = { idle: "開始前", question: "回答受付中", closed: "締め切り", votes: "票数発表", reveal: "正解発表", ranking: "ランキング", end: "最終結果" };
+
+function counts(q) {
+  const c = [0, 0, 0, 0];
+  Object.values(answers[q] || {}).forEach(v => { if (v >= 0 && v < 4) c[v]++; });
+  return c;
+}
+function scores() {
+  const upto = ["reveal", "ranking", "end"].includes(state.phase) ? state.q : state.q - 1;
+  const sc = {};
+  Object.keys(players).forEach(u => sc[u] = 0);
+  for (let q = 0; q <= upto && q < N; q++)
+    for (const [u, v] of Object.entries(answers[q] || {}))
+      if (v === QUESTIONS[q].answer && u in sc) sc[u]++;
+  return Object.entries(sc).map(([u, s]) => ({ name: players[u].name, s }))
+    .sort((a, b) => b.s - a.s || a.name.localeCompare(b.name, "ja"));
+}
+function rankHTML(limit) {
+  const list = scores().slice(0, limit); let prev = null, r = 0;
+  return '<ul class="rank">' + list.map((p, i) => {
+    if (p.s !== prev) { r = i + 1; prev = p.s; }
+    return `<li><span class="n">${r}位</span><span>${esc(p.name)}</span><span class="s">${p.s}問正解</span></li>`;
+  }).join("") + "</ul>";
+}
+const panelsHTML = (q, mode) => {
+  const c = counts(q), max = Math.max(1, ...c), ans = QUESTIONS[q].answer;
+  return '<div class="panels">' + QUESTIONS[q].choices.map((t, i) => {
+    let cls = `panel c${i}`;
+    if (mode === "reveal") cls += i === ans ? " ok" : " dim";
+    const show = mode === "votes" || mode === "reveal";
+    return `<div class="${cls}"><b>${LET[i]}</b><span>${esc(t)}</span>${show ? `<span class="cnt">${c[i]}</span><i class="bar" style="width:${c[i] / max * 100}%"></i>` : ""}</div>`;
+  }).join("") + "</div>";
+};
+
+/* ---------- 投影画面 ---------- */
+let lastKey = "";
+function renderScreen() {
+  const { phase, q } = state, key = phase + q, n = Object.keys(players).length;
+  const answered = Object.keys(answers[q] || {}).length;
+  if (key === lastKey && ["idle", "question", "closed"].includes(phase)) {
+    const el = document.getElementById("cnt");
+    if (el) el.textContent = phase === "idle" ? `参加者 ${n}人` : `回答 ${answered} / ${n}人`;
+    return;
+  }
+  lastKey = key;
+  let h = "";
+  if (phase === "idle") {
+    h = `<div class="title disp">${esc(TITLE)}</div><div class="idle"><div id="qr"></div><div class="info">スマホでQRコードを読み取って参加<br><span id="cnt" class="disp" style="font-size:4vw">参加者 ${n}人</span></div></div>`;
+  } else if (phase === "ranking" || phase === "end") {
+    h = `<div class="banner">${phase === "end" ? "最終結果" : `第${q + 1}問 終了時点のランキング`}</div>${rankHTML(10)}`;
+  } else {
+    const mode = phase;
+    const sub = phase === "question" ? `<span id="cnt">回答 ${answered} / ${n}人</span>` : phase === "closed" ? `<span id="cnt">回答 ${answered} / ${n}人</span>` : "";
+    const ban = phase === "closed" ? '<div class="banner">締め切り！</div>' : phase === "votes" ? '<div class="banner">みんなの答えは…？</div>'
+      : phase === "reveal" ? `<div class="banner">正解は ${LET[QUESTIONS[q].answer]}！ （正解 ${counts(q)[QUESTIONS[q].answer]}人）</div>` : "";
+    h = `<div class="head"><span class="tag">第${q + 1}問 / ${N}</span>${sub}</div><div class="qtext">${esc(QUESTIONS[q].text)}</div>${panelsHTML(q, mode)}${ban}`;
+  }
+  app.innerHTML = `<div class="screen">${h}</div>`;
+  if (phase === "idle") new QRCode(document.getElementById("qr"), { text: BASE, width: 280, height: 280 });
+}
+
+/* ---------- 司会者画面 ---------- */
+let hostKey = "";
+function renderHost() {
+  const { phase, q } = state, n = Object.keys(players).length, answered = Object.keys(answers[q] || {}).length;
+  const key = phase + q + state.session;
+  if (key === hostKey) { const el = document.getElementById("hcnt"); if (el) el.textContent = `${answered} / ${n}人`; const p = document.getElementById("hp"); if (p) p.textContent = `参加者 ${n}人`; return; }
+  hostKey = key;
+  const cur = phase === "idle" || phase === "end" ? "" : `<p class="q">第${q + 1}問：${esc(QUESTIONS[q].text)}</p><p class="mute">正解：${LET[QUESTIONS[q].answer]}（${esc(QUESTIONS[q].choices[QUESTIONS[q].answer])}）</p>`;
+  const nx = NEXT[phase](state);
+  app.innerHTML = `<div class="wrap host"><h1 class="disp">司会者</h1>
+  <dl><dt class="mute">状態</dt><dd>${PHASE_JA[phase]}</dd><dt class="mute">回答数</dt><dd id="hcnt">${answered} / ${n}人</dd></dl>
+  <p class="mute" id="hp">参加者 ${n}人</p>${cur}
+  <div class="gap"><button class="btn" data-act="next" ${nx ? "" : "disabled"}>${NEXT_LABEL(state)}</button>
+  <button class="btn sub" data-act="prev">ひとつ前に戻る</button>
+  <button class="btn sub" data-act="reset">全データをリセット</button></div>
+  <p class="mute" style="margin-top:20px;font-size:.85rem">投影画面: ${esc(BASE)}?role=screen<br>参加者用: ${esc(BASE)}</p></div>`;
+}
+const setState = s => set(ref(db, "quiz/state"), { ...s, session: state.session || Date.now() });
+document.addEventListener("click", e => {
+  const a = e.target.closest("[data-act]"); if (!a || role !== "host") return;
+  if (a.dataset.act === "next") { const s = NEXT[state.phase](state); if (s) setState(s); }
+  if (a.dataset.act === "prev") { const s = PREV[state.phase](state); if (s) setState(s); }
+  if (a.dataset.act === "reset" && confirm("参加者と回答をすべて消して最初に戻します。よろしいですか？"))
+    remove(ref(db, "quiz")).then(() => set(ref(db, "quiz/state"), { phase: "idle", q: 0, session: Date.now() }));
+});
+
+/* ---------- 参加者画面 ---------- */
+const LS = (k, v) => v === undefined ? localStorage.getItem(k) : localStorage.setItem(k, v);
+const uid = LS("quiz_uid") || (() => { const u = "u" + Math.random().toString(36).slice(2, 10); LS("quiz_uid", u); return u; })();
+let mine = JSON.parse(LS("quiz_ans") || "{}");
+const myScore = upto => { let s = 0; for (let q = 0; q <= upto && q < N; q++) if (mine[q] === QUESTIONS[q].answer) s++; return s; };
+function joinDB() { const nm = LS("quiz_name"); if (nm) set(ref(db, "quiz/players/" + uid), { name: nm }); }
+function renderPlayer() {
+  const { phase, q } = state, name = LS("quiz_name");
+  let h = "";
+  if (!name) {
+    h = `<h1 class="disp">${esc(TITLE)}</h1><p class="mute" style="margin-top:8px">名前を入れて参加してください</p><input id="nm" maxlength="12" placeholder="ニックネーム" autocomplete="off"><button class="btn" data-join>参加する</button>`;
+  } else if (phase === "idle") {
+    h = `<div class="big"><div class="disp">まもなく<br>開始</div><p class="mute" style="margin-top:16px">${esc(name)} さん、参加済みです</p></div>`;
+  } else if (phase === "ranking" || phase === "end") {
+    h = `<div class="big"><p class="mute">${phase === "end" ? "全問終了" : `第${q + 1}問まで`}</p><div class="disp">${myScore(q)}問正解</div><p class="mute" style="margin-top:16px">${phase === "end" ? "結果は大画面で！" : "ランキングは大画面で！"}</p></div>`;
+  } else {
+    const ans = QUESTIONS[q].answer, my = mine[q];
+    const head = `<span class="tag">第${q + 1}問 / ${N}</span><p class="q">${esc(QUESTIONS[q].text)}</p>`;
+    const opts = QUESTIONS[q].choices.map((t, i) => {
+      let cls = `opt c${i}`;
+      if (phase === "reveal") cls += i === ans ? " ok" : " dim";
+      else if (my === i) cls += " sel";
+      return `<button class="${cls}" data-ch="${i}" ${phase === "question" ? "" : "disabled"}><b>${LET[i]}</b>${esc(t)}</button>`;
+    }).join("");
+    const msg = phase === "question" ? (my === undefined ? "選んでください" : "回答しました（締切まで変更できます）")
+      : phase === "closed" ? "締め切り！大画面を見てください" : phase === "votes" ? "票数発表中…" : (my === ans ? "🎉 正解！" : my === undefined ? "未回答でした" : "残念…");
+    h = `${head}<div class="opts">${opts}</div><p class="mute" style="margin-top:16px;text-align:center">${msg}</p>`;
+  }
+  app.innerHTML = `<div class="wrap">${h}</div>`;
+}
+document.addEventListener("click", e => {
+  if (role !== "player") return;
+  if (e.target.closest("[data-join]")) {
+    const v = document.getElementById("nm").value.trim(); if (!v) return;
+    LS("quiz_name", v); joinDB(); renderPlayer(); return;
+  }
+  const b = e.target.closest("[data-ch]");
+  if (b && state.phase === "question") {
+    const c = +b.dataset.ch; mine[state.q] = c; LS("quiz_ans", JSON.stringify(mine));
+    document.querySelectorAll("[data-ch]").forEach(x => x.classList.toggle("sel", +x.dataset.ch === c));
+    set(ref(db, `quiz/answers/${state.q}/${uid}`), c);
+    const m = document.querySelector(".mute:last-child"); if (m) m.textContent = "回答しました（締切まで変更できます）";
+  }
+});
+
+/* ---------- 接続 ---------- */
+let raf = 0;
+const schedule = fn => { cancelAnimationFrame(raf); raf = requestAnimationFrame(fn); };
+let firstState = true;
+onValue(ref(db, "quiz/state"), snap => {
+  state = snap.val() || { phase: "idle", q: 0, session: 0 };
+  if (role === "player") {
+    if (String(state.session) !== LS("quiz_session")) { LS("quiz_session", String(state.session)); mine = {}; LS("quiz_ans", "{}"); joinDB(); }
+    else if (firstState) joinDB();
+    firstState = false; renderPlayer();
+  } else schedule(role === "host" ? renderHost : renderScreen);
+});
+if (role !== "player") {
+  onValue(ref(db, "quiz/players"), s => { players = s.val() || {}; schedule(role === "host" ? renderHost : renderScreen); });
+  onValue(ref(db, "quiz/answers"), s => { answers = s.val() || {}; schedule(role === "host" ? renderHost : renderScreen); });
+}
+</script>
+</body>
+</html>
